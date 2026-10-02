@@ -21,6 +21,10 @@ function render() {
   const total = monthly.reduce((sum, e) => sum + e.amount_cents, 0);
   $('total').textContent = money(total);
   $('count').textContent = `${monthly.length} expense${monthly.length === 1 ? '' : 's'} this month`;
+  $('budget-value').textContent = budget === null ? 'Not set' : money(budget);
+  $('remaining').textContent = budget === null ? '—' : money(budget - total);
+  $('remaining').classList.toggle('error', budget !== null && total > budget);
+  $('budget-note').textContent = budget === null ? 'Set a budget to start planning.' : total > budget ? 'Over budget. Time to reassess.' : 'A little breathing room.';
   const visible = monthly.filter(e => !$('filter').value || e.category === $('filter').value);
   $('rows').replaceChildren(); $('empty').hidden = visible.length > 0;
   for (const expense of visible) {
@@ -62,9 +66,10 @@ function render() {
 async function refresh(message = 'Connected • Your expenses are saved on the server.') {
   const requestId = ++refreshId;
   try {
-    const newExpenses = await api.list();
+    const [newExpenses, newBudget] = await Promise.all([api.list(), api.budget($('month').value)]);
     if (requestId !== refreshId) return;
-    expenses = newExpenses;
+    expenses = newExpenses; budget = newBudget.amount_cents;
+    $('budget').value = budget === null ? '' : (budget / 100).toFixed(2);
     render(); status(message);
   } catch (error) { if (requestId === refreshId) status(`Could not load data: ${error.message}`, true); }
 }
@@ -76,6 +81,12 @@ $('expense-form').onsubmit = async event => {
     await refresh('Expense saved.');
   } catch (error) { status(error.message, true); }
   finally { $('save-expense').disabled = false; }
+};
+$('budget-form').onsubmit = async event => {
+  event.preventDefault(); const button = event.submitter; button.disabled = true;
+  try { await api.saveBudget($('month').value, Math.round(Number($('budget').value) * 100)); await refresh('Budget saved.'); }
+  catch (error) { status(error.message, true); }
+  finally { button.disabled = false; }
 };
 $('cancel').onclick = resetForm;
 $('month').onchange = () => { if ($('month').value) { status('Loading month…'); refresh(); } };
