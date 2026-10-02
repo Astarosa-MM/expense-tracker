@@ -2,7 +2,7 @@ FROM python:3.13-slim
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY server.py .
+COPY server.py exchange_rates.py ./
 COPY public ./public
 ENV PORT=8000 DATABASE_PATH=/data/expenses.sqlite3
 EXPOSE 8000

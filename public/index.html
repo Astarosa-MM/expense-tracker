@@ -13,5 +13,10 @@
 <label>Category<select id="category"></select></label><button class="primary" id="save-expense">Add expense <span>↗</span></button><button type="button" id="cancel" hidden>Cancel edit</button>
 </form><div class="breakdown"><h3>Spending by category</h3><div id="breakdown"></div></div></section>
 <section class="panel transactions"><div class="section-heading"><div><p class="eyebrow">ONE EXPENSE AT A TIME</p><h2>Recent expenses</h2></div><label><span class="sr-only">Filter category</span><select id="filter"><option value="">All categories</option></select></label></div><p class="muted">Overview cards show the whole month. The filter applies to the list.</p><div class="table-scroll"><table><thead><tr><th>Description</th><th>Date</th><th>Amount</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="rows"></tbody></table></div><div id="empty" class="empty" hidden><span>◎</span><h3>A fresh start.</h3><p>No expenses in this view. Add your first one.</p></div></section></div>
+<section class="panel converter" aria-labelledby="converter-title">
+<div><p class="eyebrow">PLANNING A PURCHASE ABROAD?</p><h2 id="converter-title">Currency converter</h2><p class="muted">Estimate a foreign-currency amount in USD using the latest available reference rate.</p></div>
+<form id="conversion-form"><label>Foreign amount<input id="foreign-amount" type="number" min="0.01" max="1000000" step="0.01" value="100" required></label><label>Currency<select id="foreign-currency"><option>EUR</option><option>GBP</option><option>CAD</option><option>JPY</option><option>AUD</option><option>MXN</option></select></label><button class="primary" id="convert-button">Get exchange rate</button></form>
+<p id="conversion-result" role="status" aria-live="polite">Choose an amount and currency to fetch a rate.</p><p class="muted">Source: <a href="https://frankfurter.dev/" target="_blank" rel="noreferrer">Frankfurter</a>. Reference estimate only; fees and your card’s rate may differ. Expenses remain stored in USD.</p>
+</section>
 <footer>Built for the small things that add up. <span>Classroom demo • Use fictional data</span></footer>
 </main></body></html>

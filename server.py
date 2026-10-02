@@ -1,4 +1,5 @@
 """Small expense tracker: WSGI API, SQLite storage, and a same-origin frontend."""
+from contextlib import closing
 import json
 import mimetypes
 import os
@@ -7,6 +8,7 @@ from pathlib import Path
 import re
 import sqlite3
 from wsgiref.simple_server import make_server
+from exchange_rates import fetch_rate, RateUnavailable
 
 ROOT = Path(__file__).resolve().parent
 CATEGORIES = ('Food', 'Transport', 'Shopping', 'Bills', 'Health', 'Entertainment', 'Other')
@@ -15,7 +17,7 @@ CATEGORIES = ('Food', 'Transport', 'Shopping', 'Bills', 'Health', 'Entertainment
 def create_app(db_path=None):
     database = Path(db_path or os.environ.get('DATABASE_PATH', ROOT / 'data' / 'expenses.sqlite3'))
     database.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(database) as db:
+    with closing(sqlite3.connect(database)) as db, db:
         db.executescript('''
             CREATE TABLE IF NOT EXISTS expenses (
                 id INTEGER PRIMARY KEY, description TEXT NOT NULL,
@@ -64,10 +66,13 @@ def create_app(db_path=None):
         path = environ.get('PATH_INFO', '/')
         method = environ['REQUEST_METHOD']
         try:
-            with sqlite3.connect(database) as db:
+            with closing(sqlite3.connect(database)) as db, db:
                 db.row_factory = sqlite3.Row
                 if path == '/api/health' and method == 'GET':
                     return respond('200 OK', {'status': 'ok'})
+                rate_match = re.fullmatch(r'/api/exchange-rates/([A-Z]{3})', path)
+                if rate_match and method == 'GET':
+                    return respond('200 OK', fetch_rate(rate_match[1]))
                 if path == '/api/expenses':
                     if method == 'GET':
                         return respond('200 OK', [dict(row) for row in db.execute('SELECT * FROM expenses ORDER BY date DESC, id DESC')])
@@ -103,6 +108,8 @@ def create_app(db_path=None):
                     asset = ROOT / 'public' / assets[path]
                     return respond('200 OK', asset.read_bytes(), mimetypes.guess_type(asset.name)[0] or 'application/octet-stream')
                 return respond('404 Not Found', {'error': 'Not found.'})
+        except RateUnavailable as error:
+            return respond('502 Bad Gateway', {'error': str(error)})
         except (ValueError, TypeError, UnicodeDecodeError) as error:
             return respond('400 Bad Request', {'error': str(error)})
         except sqlite3.Error:

@@ -92,3 +92,33 @@ $('cancel').onclick = resetForm;
 $('month').onchange = () => { if ($('month').value) { status('Loading month…'); refresh(); } };
 $('filter').onchange = render;
 refresh();
+
+// Fetch the rate through our backend; amounts and expenses stay in the app.
+$('conversion-form').onsubmit = async event => {
+  event.preventDefault();
+  const amount = Number($('foreign-amount').value);
+  const currency = $('foreign-currency').value;
+  const result = $('conversion-result');
+  const button = $('convert-button');
+  button.disabled = true;
+  $('foreign-amount').disabled = true; $('foreign-currency').disabled = true;
+  result.classList.remove('error');
+  result.textContent = 'Fetching reference rate…';
+  try {
+    const data = await api.exchangeRate(currency);
+    const converted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount * data.rate);
+    result.textContent = `${amount.toLocaleString('en-US')} ${currency} ≈ ${converted} USD · 1 ${currency} = ${data.rate} USD · Rate date: ${data.date} · ${data.source}`;
+  } catch (error) {
+    result.textContent = error.message;
+    result.classList.add('error');
+  } finally {
+    button.disabled = false;
+    $('foreign-amount').disabled = false; $('foreign-currency').disabled = false;
+  }
+};
+for (const id of ['foreign-amount', 'foreign-currency']) {
+  $(id).oninput = () => {
+    $('conversion-result').textContent = 'Press Get exchange rate to convert these values.';
+    $('conversion-result').classList.remove('error');
+  };
+}

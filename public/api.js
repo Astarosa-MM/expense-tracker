@@ -11,6 +11,7 @@ async function request(path, method = 'GET', data) {
   return payload;
 }
 export const api = {
+  exchangeRate: currency => request(`/exchange-rates/${encodeURIComponent(currency)}`),
   list: () => request('/expenses'),
   save: (data, id) => request(id ? `/expenses/${id}` : '/expenses', id ? 'PUT' : 'POST', data),
   remove: id => request(`/expenses/${id}`, 'DELETE'),
