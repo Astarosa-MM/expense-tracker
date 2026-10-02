@@ -35,11 +35,11 @@ The sample already includes the original feature milestones. These are additiona
 
 ## Submission checklist
 
-- [ ] At least 10 successful automatic build runs for meaningful changes
-- [ ] All run URLs recorded above
-- [ ] Public repository URL
-- [ ] Public task list URL (confirm this checklist format is accepted)
-- [ ] Public workflow/build history URL
+- [x] At least 10 successful automatic build runs for meaningful changes — see `VERIFICATION.md`
+- [x] First ten successful run URLs recorded in `VERIFICATION.md`
+- [x] Public repository URL
+- [x] Public task list URL — https://trello.com/b/zghz0CFp/expense-tracker
+- [x] Public workflow/build history URL
 - [ ] One-to-two-sentence server description
 - [ ] GitHub link to `public/api.js`
 - [ ] Remote deployment tested with fictional data

@@ -32,6 +32,23 @@ These statuses describe the completed implementation in the feature branch. Trel
 ## Remaining submission work
 
 - Merge the reviewed implementation into main.
-- Confirm at least 10 successful automatic workflow runs in GitHub; commits alone are not build evidence.
-- Move verified Trello cards to Done when authenticated board access is available.
+- Requirement met: ten successful automatic push builds verified; evidence is recorded below.
+- Move verified Trello cards to Review / Finished when authenticated board access is available.
 - Deploy Penny itself remotely if the instructor requires a public app in addition to external API access.
+
+## Successful automated builds
+
+Each row below was triggered by a separate push containing one task commit. These are actual successful runs, not estimated counts.
+
+| Commit | Task | Build |
+| --- | --- | --- |
+| `c43727d` | Create app scaffold and automated build workflow | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042017918) |
+| `e24c34c` | Add SQLite backend and connect the frontend health check | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042017979) |
+| `b7652e8` | Add saved expenses table and categorized expense entry | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042019074) |
+| `a313de4` | Add regression tests for expense validation and persistence | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042018758) |
+| `42180e8` | Add expense editing and deletion controls | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042023228) |
+| `ec101e5` | Add month and category expense filters | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042034651) |
+| `31a4655` | Add monthly totals and category spending breakdown | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042038600) |
+| `2b16758` | Add monthly budget editing and remaining balance | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042047362) |
+| `e23720c` | Polish responsive layout and application states | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042049202) |
+| `609c657` | Fetch external exchange rates and verify assignment features | [Passed](https://github.com/Astarosa-MM/expense-tracker/actions/runs/37042056436) |
