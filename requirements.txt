@@ -1,0 +1,2 @@
+# Only needed for remote hosting; local development uses Python's standard library.
+gunicorn>=23,<24
