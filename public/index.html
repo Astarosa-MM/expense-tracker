@@ -7,11 +7,11 @@
 </head>
 <body>
 <main>
-  <section class="intro">
-    <div><p class="eyebrow"><span class="live-dot"></span> YOUR MONTH IN FOCUS</p><h1>Money, made clear<span>.</span></h1><p class="subtitle">A little perspective on your everyday spending.</p></div>
+  <h1 class="sr-only">Expense tracker</h1>
+  <section class="dashboard-toolbar" aria-label="Month selection">
     <label class="month-label"><span>Viewing month</span><input id="month" type="month" required></label>
   </section>
-  <p id="status" class="status" role="status" aria-live="polite">Loading your expenses…</p>
+  <p id="status" class="status sr-only" role="status" aria-live="polite">Loading your expenses…</p>
   <section class="stats" aria-label="Monthly overview">
     <article class="stat-card spent-card"><div class="stat-heading"><p>Total spent</p><span class="stat-icon" aria-hidden="true">↗</span></div><h2 id="total">—</h2><div class="stat-bottom"><span id="count">This month</span><span class="currency-label">USD</span></div></article>
     <article class="stat-card"><div class="stat-heading"><p>Monthly budget</p><span class="stat-icon" aria-hidden="true">◎</span></div><h2 id="budget-value">—</h2><form id="budget-form"><label class="sr-only" for="budget">Monthly budget in dollars</label><input id="budget" type="number" min="0" max="1000000" step="0.01" placeholder="Set your budget" required><button>Update <span aria-hidden="true">↗</span></button></form></article>

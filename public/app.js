@@ -13,7 +13,7 @@ for (const category of categories) {
   $('filter').add(new Option(category, category));
 }
 let expenses = [], budget = null, editing = null, refreshId = 0;
-const status = (message, error = false) => { $('status').textContent = message; $('status').classList.toggle('error', error); };
+const status = (message, error = false) => { $('status').textContent = message; $('status').classList.toggle('error', error); $('status').classList.toggle('sr-only', !error); };
 function resetForm() {
   editing = null; $('expense-form').reset(); $('date').value = localDate;
   $('form-title').textContent = 'Add an expense'; $('save-expense').textContent = 'Add expense ↗'; $('cancel').hidden = true;
