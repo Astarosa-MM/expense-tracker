@@ -31,7 +31,20 @@ function render() {
       const td = document.createElement('td'); td.textContent = text; tr.append(td);
     }
     const actions = document.createElement('td'); actions.className = 'actions';
-    tr.append(actions); $('rows').append(tr);
+    const edit = document.createElement('button'); edit.textContent = 'Edit'; edit.setAttribute('aria-label', `Edit ${expense.description}`);
+    edit.onclick = () => {
+      editing = expense.id; $('description').value = expense.description; $('amount').value = (expense.amount_cents / 100).toFixed(2);
+      $('date').value = expense.date; $('category').value = expense.category;
+      $('form-title').textContent = 'Edit expense'; $('save-expense').textContent = 'Save changes'; $('cancel').hidden = false; $('description').focus();
+    };
+    const remove = document.createElement('button'); remove.textContent = 'Delete'; remove.setAttribute('aria-label', `Delete ${expense.description}`);
+    remove.onclick = async () => {
+      if (!confirm(`Delete “${expense.description}”?`)) return;
+      remove.disabled = true;
+      try { await api.remove(expense.id); if (editing === expense.id) resetForm(); await refresh('Expense deleted.'); }
+      catch (error) { status(error.message, true); remove.disabled = false; }
+    };
+    actions.append(edit, remove); tr.append(actions); $('rows').append(tr);
   }
 
 }
