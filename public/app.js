@@ -1,6 +1,8 @@
 import { api } from './api.js';
 const $ = id => document.getElementById(id);
 const categories = ['Food', 'Transport', 'Shopping', 'Bills', 'Health', 'Entertainment', 'Other'];
+const categoryColors = { Food: '#ac87cb', Transport: '#7c9cca', Shopping: '#d1a779', Bills: '#8177bc', Health: '#87b6ad', Entertainment: '#cd8fa7', Other: '#9a9aaa' };
+const categorySymbols = { Food: '◒', Transport: '↗', Shopping: '◇', Bills: '▤', Health: '＋', Entertainment: '♫', Other: '·' };
 const money = cents => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
 const today = new Date();
 const localDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -32,7 +34,10 @@ function render() {
     const description = document.createElement('td');
     const name = document.createElement('strong'); name.textContent = expense.description;
     const category = document.createElement('small'); category.textContent = expense.category;
-    description.append(name, category); tr.append(description);
+    const wrapper = document.createElement('div'); wrapper.className = 'expense-description';
+    const icon = document.createElement('span'); icon.className = 'category-icon'; icon.textContent = categorySymbols[expense.category]; icon.style.setProperty('--category-color', categoryColors[expense.category]); icon.setAttribute('aria-hidden', 'true');
+    const copy = document.createElement('div'); copy.className = 'description-copy'; copy.append(name, category);
+    wrapper.append(icon, copy); description.append(wrapper); tr.append(description);
     for (const text of [expense.date, money(expense.amount_cents)]) {
       const td = document.createElement('td'); td.textContent = text; tr.append(td);
     }
@@ -53,17 +58,28 @@ function render() {
     actions.append(edit, remove); tr.append(actions); $('rows').append(tr);
   }
   $('breakdown').replaceChildren();
+  $('chart-total').textContent = money(total);
+  const chartStops = []; let chartPercent = 0; const chartLabels = [];
   for (const category of categories) {
     const amount = monthly.filter(e => e.category === category).reduce((sum, e) => sum + e.amount_cents, 0);
     if (!amount) continue;
     const row = document.createElement('div'); row.className = 'category-row';
-    const label = document.createElement('div'); label.textContent = `${category} · ${money(amount)}`;
+    row.style.setProperty('--category-color', categoryColors[category]);
+    const label = document.createElement('div');
+    const labelName = document.createElement('span'); labelName.textContent = category;
+    const labelAmount = document.createElement('strong'); labelAmount.textContent = money(amount);
+    label.append(labelName, labelAmount);
+    const nextPercent = chartPercent + amount / total * 100;
+    chartStops.push(`${categoryColors[category]} ${chartPercent}% ${nextPercent}%`); chartPercent = nextPercent;
+    chartLabels.push(`${category}: ${money(amount)}`);
     const meter = document.createElement('meter'); meter.min = 0; meter.max = total; meter.value = amount; meter.setAttribute('aria-label', `${category} share of monthly spending`);
     row.append(label, meter); $('breakdown').append(row);
   }
+  $('category-chart').style.background = total ? `conic-gradient(${chartStops.join(',')})` : '#eeebf4';
+  $('category-chart').setAttribute('aria-label', total ? `Monthly spending: ${chartLabels.join('; ')}` : 'No spending this month');
   if (!total) $('breakdown').textContent = 'Your spending breakdown will appear here.';
 }
-async function refresh(message = 'Connected • Your expenses are saved on the server.') {
+async function refresh(message = 'Your expenses are up to date.') {
   const requestId = ++refreshId;
   try {
     const [newExpenses, newBudget] = await Promise.all([api.list(), api.budget($('month').value)]);
