@@ -19,6 +19,8 @@ function resetForm() {
 function render() {
   const monthly = expenses.filter(e => e.date.slice(0, 7) === $('month').value);
   const total = monthly.reduce((sum, e) => sum + e.amount_cents, 0);
+  $('total').textContent = money(total);
+  $('count').textContent = `${monthly.length} expense${monthly.length === 1 ? '' : 's'} this month`;
   const visible = monthly.filter(e => !$('filter').value || e.category === $('filter').value);
   $('rows').replaceChildren(); $('empty').hidden = visible.length > 0;
   for (const expense of visible) {
@@ -46,7 +48,16 @@ function render() {
     };
     actions.append(edit, remove); tr.append(actions); $('rows').append(tr);
   }
-
+  $('breakdown').replaceChildren();
+  for (const category of categories) {
+    const amount = monthly.filter(e => e.category === category).reduce((sum, e) => sum + e.amount_cents, 0);
+    if (!amount) continue;
+    const row = document.createElement('div'); row.className = 'category-row';
+    const label = document.createElement('div'); label.textContent = `${category} · ${money(amount)}`;
+    const meter = document.createElement('meter'); meter.min = 0; meter.max = total; meter.value = amount; meter.setAttribute('aria-label', `${category} share of monthly spending`);
+    row.append(label, meter); $('breakdown').append(row);
+  }
+  if (!total) $('breakdown').textContent = 'Your spending breakdown will appear here.';
 }
 async function refresh(message = 'Connected • Your expenses are saved on the server.') {
   const requestId = ++refreshId;
