@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Penny • Expense tracker</title>
+  <link rel="stylesheet" href="/styles.css"><script type="module" src="/app.js"></script>
+</head>
+<body>
+<main>
+  <h1 class="sr-only">Expense tracker</h1>
+  <section class="dashboard-toolbar" aria-label="Month selection">
+    <label class="month-label"><span>Viewing month</span><input id="month" type="month" required></label>
+  </section>
+  <p id="status" class="status sr-only" role="status" aria-live="polite">Loading your expenses…</p>
+  <section class="stats" aria-label="Monthly overview">
+    <article class="stat-card spent-card"><div class="stat-heading"><p>Total spent</p><span class="stat-icon" aria-hidden="true">↗</span></div><h2 id="total">—</h2><div class="stat-bottom"><span id="count">This month</span><span class="currency-label">USD</span></div></article>
+    <article class="stat-card"><div class="stat-heading"><p>Monthly budget</p><span class="stat-icon" aria-hidden="true">◎</span></div><h2 id="budget-value">—</h2><form id="budget-form"><label class="sr-only" for="budget">Monthly budget in dollars</label><input id="budget" type="number" min="0" max="1000000" step="0.01" placeholder="Set your budget" required><button>Update <span aria-hidden="true">↗</span></button></form></article>
+    <article class="stat-card remaining-card"><div class="stat-heading"><p>Left to spend</p><span class="stat-icon" aria-hidden="true">◷</span></div><h2 id="remaining">—</h2><span id="budget-note">Set a budget to start planning.</span></article>
+  </section>
+  <div class="workspace">
+    <section class="panel expense-panel" aria-labelledby="form-title"><div class="panel-heading"><span class="section-icon" aria-hidden="true">＋</span><div><p class="eyebrow">KEEP TRACK</p><h2 id="form-title">Add an expense</h2></div></div>
+      <form id="expense-form">
+        <label>Description<input id="description" maxlength="120" placeholder="What did you spend on?" required></label>
+        <div class="form-row"><label>Amount ($)<input id="amount" type="number" min="0.01" max="1000000" step="0.01" placeholder="0.00" required></label><label>Date<input id="date" type="date" required></label></div>
+        <label>Category<select id="category"></select></label>
+        <button class="primary" id="save-expense">Add expense <span aria-hidden="true">↗</span></button><button type="button" class="secondary" id="cancel" hidden>Cancel edit</button>
+      </form>
+      <div class="form-note"><span aria-hidden="true">↺</span> Small habits. A clearer picture.</div>
+    </section>
+    <section class="panel transactions" aria-labelledby="transactions-title">
+      <div class="section-heading"><div><p class="eyebrow">THE DETAILS</p><h2 id="transactions-title">Recent expenses</h2></div><label class="filter-label"><span class="sr-only">Filter category</span><select id="filter"><option value="">All categories</option></select></label></div>
+      <p class="muted table-note">Your selected month, one purchase at a time.</p>
+      <div class="table-scroll"><table><thead><tr><th>Description</th><th>Date</th><th class="amount-heading">Amount</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="rows"></tbody></table></div>
+      <div id="empty" class="empty" hidden><span aria-hidden="true">◎</span><h3>A fresh start.</h3><p>No expenses in this view. Add your first one.</p></div>
+    </section>
+  </div>
+  <div class="insights">
+    <section class="panel breakdown-panel" aria-labelledby="breakdown-title">
+      <div class="section-heading"><div><p class="eyebrow">THE BIGGER PICTURE</p><h2 id="breakdown-title">Where it goes</h2></div><span class="quiet-label">Whole month</span></div>
+      <div class="breakdown-layout"><div class="donut" id="category-chart" role="img" aria-label="No spending this month"><div class="donut-center"><span>MONTHLY SPEND</span><strong id="chart-total">$0.00</strong></div></div><div id="breakdown" class="category-list"></div></div>
+    </section>
+    <section class="panel converter" aria-labelledby="converter-title">
+      <div class="section-heading"><div><p class="eyebrow">BEYOND BORDERS</p><h2 id="converter-title">Currency converter</h2></div><span class="exchange-icon" aria-hidden="true">⇄</span></div>
+      <p class="muted">A quick USD estimate for your next purchase abroad.</p>
+      <form id="conversion-form"><div class="conversion-inputs"><label>Foreign amount<input id="foreign-amount" type="number" min="0.01" max="1000000" step="0.01" value="100" required></label><label>Currency<select id="foreign-currency"><option>EUR</option><option>GBP</option><option>CAD</option><option>JPY</option><option>AUD</option><option>MXN</option></select></label></div><button class="primary" id="convert-button">Get exchange rate <span aria-hidden="true">↗</span></button></form>
+      <p id="conversion-result" role="status" aria-live="polite">Choose an amount and currency to see its USD value.</p>
+      <p class="source-note">Rates from <a href="https://frankfurter.dev/" target="_blank" rel="noreferrer">Frankfurter</a>. Estimates exclude fees. Expenses are saved in USD.</p>
+    </section>
+  </div>
+</main>
+</body>
+</html>
