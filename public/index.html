@@ -1,1 +1,17 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><title>Penny</title><link rel="stylesheet" href="/styles.css"><script type="module" src="/app.js"></script><h1>Penny expense tracker</h1><p id="status">App scaffold ready.</p></html>
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Penny • Expense tracker</title><link rel="stylesheet" href="/styles.css"><script type="module" src="/app.js"></script></head>
+<body>
+<header><a class="brand" href="/">◒ penny<span>Make room for what matters.</span></a><span class="badge">SAMPLE PROJECT · USD</span></header>
+<main>
+<section class="intro"><div><p class="eyebrow">YOUR MONEY, AT A GLANCE</p><h1>A little clarity.<br>A lot more control.</h1><p>Track the everyday. See where your money goes.</p></div><label hidden class="month-label">Viewing month<input id="month" type="month" required></label></section>
+<p id="status" role="status" aria-live="polite">Connecting to your expense tracker…</p>
+<section hidden class="stats" aria-label="Monthly overview"><article class="dark"><p>Total spent</p><h2 id="total">—</h2><span id="count">This month</span></article><article hidden><p>Monthly budget</p><h2 id="budget-value">—</h2><form id="budget-form"><label class="sr-only" for="budget">Monthly budget in dollars</label><input id="budget" type="number" min="0" max="1000000" step="0.01" placeholder="Set budget ($)" required><button>Save</button></form></article><article hidden><p>Remaining</p><h2 id="remaining">—</h2><span id="budget-note">Set a budget to start planning.</span></article></section>
+<div class="workspace"><section class="panel"><p class="eyebrow">THE EVERYDAY ADDS UP</p><h2 id="form-title">Add an expense</h2><form id="expense-form">
+<label>Description<input id="description" maxlength="120" placeholder="Coffee with a friend" required></label>
+<div class="form-row"><label>Amount ($)<input id="amount" type="number" min="0.01" max="1000000" step="0.01" placeholder="0.00" required></label><label>Date<input id="date" type="date" required></label></div>
+<label>Category<select id="category"></select></label><button class="primary" id="save-expense">Add expense <span>↗</span></button><button type="button" id="cancel" hidden>Cancel edit</button>
+</form><div hidden class="breakdown"><h3>Spending by category</h3><div id="breakdown"></div></div></section>
+<section class="panel transactions"><div class="section-heading"><div><p class="eyebrow">ONE EXPENSE AT A TIME</p><h2>Recent expenses</h2></div><label hidden><span class="sr-only">Filter category</span><select id="filter"><option value="">All categories</option></select></label></div><p class="muted">Overview cards show the whole month. The filter applies to the list.</p><div class="table-scroll"><table><thead><tr><th>Description</th><th>Date</th><th>Amount</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="rows"></tbody></table></div><div id="empty" class="empty" hidden><span>◎</span><h3>A fresh start.</h3><p>No expenses in this view. Add your first one.</p></div></section></div>
+<footer>Built for the small things that add up. <span>Classroom demo • Use fictional data</span></footer>
+</main></body></html>
