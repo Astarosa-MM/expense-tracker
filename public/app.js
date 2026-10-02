@@ -17,9 +17,9 @@ function resetForm() {
   $('form-title').textContent = 'Add an expense'; $('save-expense').textContent = 'Add expense ↗'; $('cancel').hidden = true;
 }
 function render() {
-  const monthly = expenses;
+  const monthly = expenses.filter(e => e.date.slice(0, 7) === $('month').value);
   const total = monthly.reduce((sum, e) => sum + e.amount_cents, 0);
-  const visible = monthly;
+  const visible = monthly.filter(e => !$('filter').value || e.category === $('filter').value);
   $('rows').replaceChildren(); $('empty').hidden = visible.length > 0;
   for (const expense of visible) {
     const tr = document.createElement('tr');
